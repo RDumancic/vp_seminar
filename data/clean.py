@@ -12,6 +12,9 @@ male_suicides = gender_suicides.query('sex == "male"').reset_index()
 
 total_suicides["male"] = male_suicides["suicides"]
 total_suicides["female"] = female_suicides["suicides"]
+
+# find the max num of suicides (used in app.js as legend max)
+print(total_suicides.loc[total_suicides["suicides"].idxmax()])
 total_suicides = total_suicides.drop(columns="country-year")
 
 print(total_suicides)

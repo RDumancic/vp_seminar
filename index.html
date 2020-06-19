@@ -5,11 +5,35 @@
         <title>Suicide Rates Visualization 1985-2016</title>
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <script src="//d3js.org/topojson.v3.min.js"></script>
+        <script src="//unpkg.com/d3-simple-slider"></script>
+        <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="styles/styles.css">
     </head>
 
     <body>
-        <script>
-            
-        </script>
+        <div class="container-fluid">
+            <div class="row header">
+                <div class="col mt-2 mb-3">
+                    <h1 class="text-center">how many ppl did a flip fggt ayy lmao</h1>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-10">
+                    <div id="map"></div>
+                </div>
+                <div class="col-2 d-flex justify-content-center">
+                    <div id="info"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col align-self-center">
+                    <div id="slider-time"></div>
+                </div>
+            </div>
+        </div>
+
+        <script src="app/app.js"></script>
     </body>
 </html>
