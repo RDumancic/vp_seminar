@@ -19,7 +19,10 @@
             </div>
 
             <div class="row">
-                <div class="col-10">
+                <div class="col-1 d-flex justify-content-start">
+                    <div id="legend"></div>
+                </div>
+                <div class="col-9">
                     <div id="map"></div>
                 </div>
                 <div class="col-2 d-flex justify-content-center">
@@ -28,8 +31,17 @@
             </div>
 
             <div class="row">
-                <div class="col align-self-center">
+                <div class="col-1">
+                    <!-- Empty buffer to easily match slider width to map width-->
+                </div>
+                <div class="col-9 align-self-center">
                     <div id="slider-time"></div>
+                </div>
+                <div class="col-2">
+                    <form name="form">
+                        <label class="block"></label><input type="radio" name="radios" value="total" checked> Total number of suicides</label>
+                        <label class="block"></label><input type="radio" name="radios" value="rate"> Suicide rates per 100,000 population</label>
+                    </form>
                 </div>
             </div>
         </div>

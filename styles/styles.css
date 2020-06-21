@@ -6,3 +6,17 @@ body {
     font-family:'Times New Roman';
     font-weight: bold;
 }
+
+form {
+    margin-top: 20px;
+}
+
+.block {
+    margin-top: 15px;
+    display: block;
+}
+
+#slider-time .tick text {
+    fill: black;
+    font-size: small;
+}

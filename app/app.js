@@ -6,13 +6,24 @@ var suicideData;
 var svg;
 var countries;
 var currentYearData;
+var prevRadio;
+var choice = "Total suicides";
 //constants
-const noDataCountries = "#A9A9A9"
+const noDataCountries = "#A9A9A9";
+const defaultYear = 1985;
 const maxValue = 61500; // refer to clean.py
-const colorScale = d3.scaleLinear().domain([0, maxValue]).range([0,1]);
+const colorScale = d3.scaleLinear()
+    .domain([0, maxValue])
+    .range([255,0]);
 
-// Starting point for the app -- initializes map and pulls data
+// Starting point for the app -- initializes site and pulls data
 function init() {
+    document.forms.form.addEventListener("change", function(item) {
+        if(item.target.name == "radios") {
+            prevRadio = item.target;
+            choice = prevRadio.value;
+        }
+    })
     d3.json(url).then(topojson => {
         mapData = topojson;
         return d3.json("data/json/cyanide.json");
@@ -20,6 +31,7 @@ function init() {
         suicideData = data;
         createSVG();
         createSlider();
+        selectYear(defaultYear);
         return 1;
     })
 }
@@ -73,7 +85,7 @@ function zoomed() {
 function createSlider() {
     const min = 1985;
     const max = 2016;
-    const width = document.getElementById("map").clientWidth;
+    const width = document.getElementById("slider-time").clientWidth;
     var sliderTime = d3.sliderBottom()
         .min(min)
         .max(max)
@@ -81,15 +93,8 @@ function createSlider() {
         .tickFormat(d3.format(''))
         .ticks(max - min)
         .step(1)
-        .default(1985)
-        .on("onchange", val => {
-            currentYearData = suicideData.filter(item => item.year == val);
-            countries.each(function(d) {
-                console.log(d)
-                const suicides = getData(d);
-                d3.select(this).style("fill", suicides ? colorScaleSuicides(suicides) : noDataCountries)
-            });
-        });
+        .default(defaultYear)
+        .on("onchange", year => selectYear(year));
 
     const gStep = d3.select("div#slider-time")
         .append("svg")
@@ -99,6 +104,15 @@ function createSlider() {
         .attr('transform', 'translate(30,30)');
 
     gStep.call(sliderTime);
+}
+
+// placed in a separate function so it can be called to set default values
+function selectYear(year) {
+    currentYearData = suicideData.filter(item => item.year == year);
+    countries.each(function(d) {
+        const suicides = getData(d.properties.name);
+        d3.select(this).style("fill", suicides ? colorScaleSuicides(suicides) : noDataCountries)
+    });
 }
 
 function getData(val) {
@@ -112,8 +126,10 @@ function getData(val) {
 }
 
 function colorScaleSuicides(suicides) {
-    val = d3.interpolateOrRd(colorScale(suicides));
-    return val;
+    var hex = Math.trunc(colorScale(suicides)).toString(16);
+    hex.length == 1 ? hex = "0" + hex : hex = hex;
+    var x = "ff" + hex + hex;
+    return x;
 }
 
 // initialize
