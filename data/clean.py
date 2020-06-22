@@ -21,7 +21,8 @@ total_suicides["rate"] = suicide_rate
 print(total_suicides.loc[total_suicides["suicides"].idxmax()])
 total_suicides = total_suicides.drop(columns="country-year")
 
-print(total_suicides)
+# find the highest suicide rate (used in app.js as legend max)
+print(total_suicides.loc[total_suicides["rate"].idxmax()])
 total_suicides.to_csv("master/master-clean.csv", index=False)
 
 # The generated .csv is made into json using: https://csvjson.com/csv2json
