@@ -83,7 +83,8 @@ function createSVG() {
         .attr("class", "country")
         .attr("d", path)
         .style("stroke", "gray")
-        .style("stroke-width", 1);
+        .style("stroke-width", 1)
+        .on("click", country => setInfo(country));
 
     var zoom = d3.zoom()
         .scaleExtent([1, 8])
@@ -217,6 +218,19 @@ function getScale() {
     } else {
         return scaleRate;
     }
+}
+
+function setInfo(country) {
+    const data = currentYearData.find(item => item.country == country.properties.name);
+    var info = d3.select("#info");
+
+    var innerHTML = 
+        "<h4>" + data.country + " - " + data.year + "</h4>" +
+        "<p><b>Population:</b> " + data.population + "</p>" +
+        "<p><b>Total number of suicides:</b> " + data.suicides + "</p>" +
+        "<p><b>Suicide rate per 100,000 population:</b> " + data.rate + "</p>";
+        
+    info.html(innerHTML);
 }
 
 // initialize
