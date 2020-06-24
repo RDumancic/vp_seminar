@@ -18,6 +18,14 @@ const scaleTotal = d3.scaleLinear()
 const scaleRate = d3.scaleLinear()
     .domain([maxRate,0])
     .range([0, height - 15]);
+const margin = {top: 20, right: 20, bottom: 40, left: 60}
+const barWidth = 242 - margin.left - margin.right;
+const barHeight = 400 - margin.top - margin.bottom;
+const bar = d3.select("#bar").append("svg")
+    .attr("width", barWidth + margin.left + margin.right)
+    .attr("height", barHeight + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // variables
 var mapData;
@@ -225,12 +233,52 @@ function setInfo(country) {
     var info = d3.select("#info");
 
     var innerHTML = 
-        "<h4>" + data.country + " - " + data.year + "</h4>" +
+        "<h4><b>" + data.country + " - " + data.year + "</b></h4>" +
         "<p><b>Population:</b> " + data.population + "</p>" +
         "<p><b>Total number of suicides:</b> " + data.suicides + "</p>" +
+        "<p><b>Male suicides:</b> " + data.male + "</p>" +
+        "<p><b>Female suicides:</b> " + data.female + "</p>" +
         "<p><b>Suicide rate per 100,000 population:</b> " + data.rate + "</p>";
         
     info.html(innerHTML);
+
+    bar.selectAll("g").remove();
+    bar.selectAll("rect").remove();
+
+    var bardata = [
+        {gender: "male", value: data.male},
+        {gender: "female", value: data.female}
+    ];
+
+    console.log(bardata);
+
+    var x = d3.scaleBand()
+        .range([0, barWidth])
+        .domain(bardata.map(function(d) { return d.gender}))
+        .padding(0.2)
+
+    var y = d3.scaleLinear()
+        .range([barHeight, 0])
+        .domain([0, data.male + data.female]);
+        
+    bar.append("g")
+        .attr("transform", "translate(0," + barHeight + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .style("font-size", "small");      
+
+    bar.append("g")
+        .call(d3.axisLeft(y));
+
+    bar.selectAll("mybar")
+        .data(bardata)
+        .enter()
+        .append("rect")
+        .style("fill", "lightcoral")
+        .attr("x", function(d) {return x(d.gender);})
+        .attr("y", function(d) {return y(d.value);})
+        .attr("width", x.bandwidth())
+        .attr("height", function(d) { return barHeight - y(d.value);})
 }
 
 // initialize
