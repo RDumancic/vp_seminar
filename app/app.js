@@ -238,7 +238,7 @@ function setInfo(country) {
         "<p><b>Total number of suicides:</b> " + data.suicides + "</p>" +
         "<p><b>Male suicides:</b> " + data.male + "</p>" +
         "<p><b>Female suicides:</b> " + data.female + "</p>" +
-        "<p><b>Suicide rate per 100,000 population:</b> " + data.rate + "</p>";
+        "<p><b>Suicide rate per 100,000 population:</b> " + data.rate.toFixed(2) + "</p>";
         
     info.html(innerHTML);
 
