@@ -25,3 +25,11 @@ form {
 #legend .tick text {
     font-size: small;
 }
+
+#play {
+    align-self: center;
+    width: 250px;
+    color: white;
+    background-color: brown;
+    border-color: brown;
+}

@@ -1,22 +1,23 @@
 // topojson data taken from https://github.com/deldersveld/topojson -- map without antarctica
 const url = "https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries-sans-antarctica.json";
 //constants
-const height = 800;
+const height = 750;
 const noDataCountries = "#A9A9A9";
 const defaultYear = 1985;
-const maxSuicides = 61500; // refer to clean.py
-const maxRate = 52; // refer to clean.py
+const finalYear = 2016;
+const finalYearSuicides = 61500; // refer to clean.py
+const finalYearRate = 52; // refer to clean.py
 const colorTotal = d3.scaleLinear()
-    .domain([0, maxSuicides])
+    .domain([0, finalYearSuicides])
     .range([255,0]);
 const colorRate = d3.scaleLinear()
-    .domain([0,maxRate])
+    .domain([0,finalYearRate])
     .range([255,0]);
 const scaleTotal = d3.scaleLinear()
-    .domain([maxSuicides,0])
+    .domain([finalYearSuicides,0])
     .range([0, height - 15]);
 const scaleRate = d3.scaleLinear()
-    .domain([maxRate,0])
+    .domain([finalYearRate,0])
     .range([0, height - 15]);
 const margin = {top: 20, right: 20, bottom: 40, left: 60}
 const barWidth = 242 - margin.left - margin.right;
@@ -37,6 +38,7 @@ var prevRadio;
 var choice = "total";
 var currentYear;
 var legend;
+var sliderTime;
 
 // Starting point for the app -- initializes site and pulls data
 function init() {
@@ -56,6 +58,7 @@ function init() {
         createSVG();
         createSlider();
         createLegend();
+        initPlay();
         selectYear(defaultYear);
         return 1;
     })
@@ -108,15 +111,15 @@ function zoomed() {
 
 // time slider taken from https://bl.ocks.org/johnwalley/e1d256b81e51da68f7feb632a53c3518
 function createSlider() {
-    const min = 1985;
-    const max = 2016;
+    const defaultYear = 1985;
+    const finalYear = 2016;
     const width = document.getElementById("slider-time").clientWidth;
-    var sliderTime = d3.sliderBottom()
-        .min(min)
-        .max(max)
+    sliderTime = d3.sliderBottom()
+        .min(defaultYear)
+        .max(finalYear)
         .width(width - 50)
         .tickFormat(d3.format(''))
-        .ticks(max - min)
+        .ticks(finalYear - defaultYear)
         .step(1)
         .default(defaultYear)
         .on("onchange", year => selectYear(year));
@@ -170,6 +173,32 @@ function colorScaleSuicides(suicides) {
     hex.length == 1 ? hex = "0" + hex : hex = hex;
     var x = "ff" + hex + hex;
     return x;
+}
+
+function initPlay() {
+    play = d3.select("#play");
+    play.on("click", () => {
+        if(!play.classed("disabled")) {
+            play.classed("disabled", true);
+            startPlay();
+        }
+    } )
+}
+
+function startPlay() {
+    var i = +1;
+    if(currentYear == finalYear) {
+        i = -1;
+    }
+    interval = setInterval(() => {
+        var curr = currentYear + i;
+        if(curr > finalYear || curr < defaultYear) {
+            clearInterval(interval);
+            play.classed("disabled", false);
+        } else {
+            sliderTime.value(currentYear + i)
+        }
+    }, 100)
 }
 
 // legend taken from https://bl.ocks.org/HarryStevens/6eb89487fc99ad016723b901cbd57fde
